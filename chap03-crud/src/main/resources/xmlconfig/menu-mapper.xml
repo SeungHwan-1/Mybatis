@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MenuMapper">
+
+    <resultMap id="menuResultMap" type="com.ohgiraffers.dto.MenuDTO">
+<!--        조회해온 컬럼을 맵핑할거다-->
+<!--        code는 디티오에 컬럼에 있는걸 매핑할거임  프라이머리키만 id -->
+        <id property="code" column="MENU_CODE"/>
+        <result property="name" column="MENU_NAME"/>
+        <result property="price" column="MENU_PRICE"/>
+        <result property="categoryCode" column="CATEGORY_CODE"/>
+        <result property="orderableStatus" column="ORDERABLE_STATUS"/>
+<!--        받을건다해주자 걍 디티오전부-->
+    </resultMap>
+
+    <select id="selectAllMenu" resultMap="menuResultMap">
+        SELECT
+            MENU_CODE,
+        MENU_NAME,
+        MENU_PRICE,
+        CATEGORY_CODE,
+        ORDERABLE_STATUS
+        FROM TBL_MENU
+        WHERE ORDERABLE_STATUS = 'Y'
+    </select>
+
+    <select id="selectMenuByCode" resultMap="menuResultMap">
+        SELECT
+        MENU_CODE,
+        MENU_NAME,
+        MENU_PRICE,
+        CATEGORY_CODE,
+        ORDERABLE_STATUS
+        FROM TBL_MENU
+        WHERE ORDERABLE_STATUS = 'Y'
+        AND MENU_CODE = #{ code }
+    </select>
+    <insert id="insertMenu" parameterType="com.ohgiraffers.dto.MenuDTO">
+        INSERT INTO TBL_MENU(
+            MENU_NAME,
+            MENU_PRICE,
+            CATEGORY_CODE,
+            ORDERABLE_STATUS
+        )VALUES(
+            #{name},
+            #{price},
+            #{categoryCode},
+            'Y'
+        )
+<!--
+    insert,update,delete 의 경우 기본 int로 수행 결과를 반환한다.
+    파라미터로 전달된 DTO의 필드명으로 값을 넣어야 하며,.
+    getter 를 이용하므로 getter가 없으면 에러가 발생한다..
+    파라미터 타입도 생략 가능하다..
+-->
+
+    </insert>
+    <update id="updateMenu" parameterType="com.ohgiraffers.dto.MenuDTO">
+        UPDATE TBL_MENU
+        SET
+        MENU_NAME = #{name},
+        MENU_PRICE = #{price},
+        CATEGORY_CODE = #{categoryCode},
+        ORDERABLE_STATUS = 'Y'
+        WHERE MENU_CODE = #{ code }
+
+    </update>
+    <delete id="deleteMenu" parameterType="com.ohgiraffers.dto.MenuDTO">
+        DELETE FROM TBL_MENU
+        WHERE  MENU_CODE = #{ code }
+    </delete>
+</mapper>
