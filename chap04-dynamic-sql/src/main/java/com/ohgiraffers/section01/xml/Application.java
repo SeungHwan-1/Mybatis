@@ -48,9 +48,9 @@ public class Application {
             int no = sc.nextInt();
 
             switch(no){
-                case 1:menuService.searchMenuByCodeOrSearchAll(inputAllOrOne());break;
-                case 2 : break;
-                case 3 : break;
+                case 1 :menuService.searchMenuByCodeOrSearchAll(inputAllOrOne());break;
+                case 2 :menuService.searchMenuByNameOrCategory(inputSearchCriteriaMap()); break;
+                case 3 :menuService.modifyMenu(inputChangeInfo()); break;
                 case 9 :
                     System.out.println("프로그램을 종료합니다");return;
                 default:
@@ -59,6 +59,66 @@ public class Application {
 
         }while (true);
 
+    }
+
+    private static Map<String,Object> inputChangeInfo() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("변경할 메뉴 코드를 입력해 주세요");
+        int code = sc.nextInt();
+        System.out.println("변경할 메뉴 이름을 입력 해주세요");
+        sc.nextLine();
+        String name = sc.nextLine();
+        System.out.println("변경할 카테고리 코드를 입력 해주세요");
+        String categoryCode = sc.nextLine();
+        System.out.println("판매 여부를 결정 해주세요 (Y,N)");
+        String orderableStatus = sc.nextLine();
+
+        if (name == null || name.equals("")) {
+            name = null;
+        }
+        if (categoryCode == null || categoryCode.equals("")) {
+            categoryCode = null;
+        }
+        if (orderableStatus == null || orderableStatus.equals("")) {
+            orderableStatus = null;
+        }
+
+
+        Map<String,Object> criteria = new HashMap<>();
+        criteria.put("code",code);
+        criteria.put("name",name);
+        criteria.put("categoryCode",categoryCode);
+        criteria.put("orderableStatus",orderableStatus);
+        return criteria;
+    }
+
+    private static Map<String,Object> inputSearchCriteriaMap() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("검색할 조건을 입력 해주세요" +
+                "category or name or both or null");
+        String condition = sc.nextLine();
+
+        Map<String,Object> criteria = new HashMap<>();
+
+        if("category".equals(condition)){
+            System.out.println(" 검색할 카테고리 코드를 입력 해주세요 :");
+            int categoryCode = sc.nextInt();
+
+            criteria.put("categoryValue", categoryCode);
+        }else if("name".equals(condition)){
+            System.out.println("검색할 메뉴 이름을 입력 해주세요");
+            String nameValue = sc.nextLine();
+            criteria.put("nameValue", nameValue);
+        }else if("both".equals(condition)){
+            System.out.println("검색할 이름을 입력 해주세요 :");
+            String nameValue = sc.nextLine();
+            System.out.println("검색할 카테고리 코드를 입력해 주세요 :");
+            int categoryValue = sc.nextInt();
+
+            criteria.put("nameValue", nameValue);
+            criteria.put("categoryValue", categoryValue);
+        }
+        return criteria;
     }
 
     private static SearchCriteria inputAllOrOne() {
